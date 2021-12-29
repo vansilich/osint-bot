@@ -1,0 +1,17 @@
+{
+  "name": "yourname/yourproject",
+  "description": "Project description",
+  "type": "project",
+  "require": {
+    "danog/madelineproto": "*",
+    "phpoffice/phpspreadsheet": "^1.20",
+    "irazasyed/telegram-bot-sdk": "2.0",
+    "ext-pdo": "*",
+  },
+  "license": "AGPL-3.0-only",
+  "autoload": {
+    "psr-4": {
+      "App\\": "app"
+    }
+  }
+}

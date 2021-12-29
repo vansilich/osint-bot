@@ -1,0 +1,6 @@
+executedColumns = {array} [1]
+ 0 = "A"
+currentRow = {array} [2]
+ A = "info@honeywell.ru\nalevtina.baschenko@honeywell.com\nvladimir.komarov@honeywell.com"
+ B = "+7(495)7969800\n+7(495)7969880"
+currentColumn = "email"
