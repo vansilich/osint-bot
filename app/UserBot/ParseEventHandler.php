@@ -22,7 +22,7 @@ class ParseEventHandler extends EventHandler
      */
     public function onUpdateNewChannelMessage(array $update)
     {
-        return $this->onUpdateNewMessage($update);
+        $this->onUpdateNewMessage( $update );
     }
 
     /**
@@ -32,8 +32,8 @@ class ParseEventHandler extends EventHandler
      */
     public function onUpdateNewMessage(array $update)
     {
-        $file = ROOT . DIRECTORY_SEPARATOR . 'userbot_status.php';
-        $content = unserialize(file_get_contents($file));
+
+        $content = unserialize( file_get_contents(STATUS_PATH) );
 
         if ($content === USERBOT_STOPPED) {
             SessionsHandler::getInstance()->getSession()->stop();
@@ -41,7 +41,9 @@ class ParseEventHandler extends EventHandler
         }
 
         $bot = Bot::getInstance();
+
         $message = $update['message'];
+
         if ( $this->isNotBotWithUser( $message ) ||
              $this->isNotMatchedCommand($message) ||
              $this->wasSentBeforeSession($message) ) {
@@ -57,7 +59,7 @@ class ParseEventHandler extends EventHandler
             return;
         }
 
-        call([$bot, $method], $matches);
+        $bot->$method( $matches );
     }
 
     /**
@@ -66,7 +68,7 @@ class ParseEventHandler extends EventHandler
      * @param $message
      * @return bool
      */
-    protected function isNotBotWithUser( $message ) :bool
+    protected function isNotBotWithUser( $message ): bool
     {
         $from_id = $message['from_id']['user_id'];
         $to_id = $message['to_id']['user_id'] ?? $message['to_id']['chat_id'];

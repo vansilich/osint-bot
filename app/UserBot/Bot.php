@@ -4,20 +4,20 @@ namespace App\UserBot;
 
 use Amp\Deferred;
 use Amp\Loop;
+use Amp\Promise;
 use App\App;
 use App\Singleton;
-use App\UserBot\Data\Document;
+use App\UserBot\Data\DbHandler;
 use danog\MadelineProto\SecurityException;
-use Exception;
 use function osint\helpers\formatPhone;
 
 class Bot
 {
     use Singleton;
 
-    public array $executedColumns = [];
     public string $currentColumn = '';
-    public int $currentRowId;
+    public string $currentValue = '';
+    public int $currentId;
 
     public int $timeOfSwitchSession = 0;
     public bool $waitingEnterCommand = false;
@@ -45,49 +45,40 @@ class Bot
         SessionsHandler::getInstance()->getSession()->startAndLoop($class);
     }
 
-    /**
-     * @throws Exception
-     */
-    public function parseStart(): \Generator
-    {
-        foreach (Document::getInstance()->iterator() as $chunk) {
-            foreach ( $chunk as $key => $row ) {
-                $this->currentRowId = $key;
-
-                yield $this->initCell( $row );
-            }
-        }
-    }
-
-    private function initCell( $row ): \Generator
+    public function initCell(): \Generator
     {
 
-        $documentSheet = Document::getInstance();
+        $DbHandler= DbHandler::getInstance();
+        foreach ( $DbHandler->getData() as $row ) {
 
-        foreach ( $documentSheet->wanted_columns as $columnName => $column) {
-            $this->currentColumn = $columnName;
+            $this->currentId = $row['id'];
+            foreach ( $DbHandler->wanted_columns as $columnName) {
 
-            $dataString = $row[$column['columnIndex']];
+                $this->currentColumn = $columnName;
+                $dataString = $row[$columnName] ?? null;
 
-            foreach ( explode("\n", $dataString) as $value ) {
-                if ($value === 'break') {
-                    SessionsHandler::getInstance()->dieScript($this->currentColumn, $this->currentRowId);
-                }
-                if ($columnName === "email" && $value !== '') {
+                foreach ( explode("\n", $dataString) as $value ) {
 
-                    $this->waitingEnterCommand = true;
-                    yield $this->sendMessage( $this->commands['getEmail'] );
-                    $this->waitingEnterCommand = false;
-                    yield $this->sendMessage( $value );
-                }
-                elseif ($columnName === "phone") {
-                    $phone = formatPhone($value);
+                    $this->currentValue = $value;
 
-                    if ($phone !== '') {
+                    if ($columnName === "email" && $value !== '') {
+
                         $this->waitingEnterCommand = true;
-                        yield $this->sendMessage( $this->commands['getPhone'] );
+                        yield $this->sendMessage( $this->commands['getEmail'] );
                         $this->waitingEnterCommand = false;
-                        yield $this->sendMessage( $phone );
+                        yield $this->sendMessage( $value );
+
+                    }
+                    elseif ($columnName === "phones") {
+                        $phone = formatPhone($value);
+
+                        if ($phone !== '') {
+
+                            $this->waitingEnterCommand = true;
+                            yield $this->sendMessage( $this->commands['getPhone'] );
+                            $this->waitingEnterCommand = false;
+                            yield $this->sendMessage( $phone );
+                        }
                     }
                 }
             }
@@ -95,100 +86,67 @@ class Bot
         }
     }
 
-    public function sendMessage($command) :void
+
+    public function sendMessage($command): void
     {
         $MadelineProto = SessionsHandler::getInstance()->getSession();
-
         $this->currentCommand = $command;
+
         $MadelineProto->loop( function () use ($MadelineProto, $command) {
             yield $MadelineProto->messages->sendMessage(['peer' => BOT_NICK, 'message' => $command], ['queue' => 'bot']);
         });
     }
 
-    public function startSending() :void
-    {
-        $app = App::getInstance();
-
-        $this->executedColumns = [];
-
-        //start loop Generator from initCell()
-        $app->stack->current()->current();
-    }
-
-    public function saveValues($matches): \Amp\Promise
+    public function saveValues($matches): void
     {
         $this->waitingEnterCommand = true;
 
-        $deferred = new Deferred();
+        DbHandler::getInstance()->saveLastValues($this->currentColumn, $this->currentId, $this->currentValue);
 
-        Loop::delay(10000, function () use ($deferred, $matches) {
-            if ( !$this->currentRowId && !$this->currentColumn ) {
-                return;
-            }
+        if ( isset($matches[1]) ) {
 
-            $data = '';
-            if ( isset($matches[1]) ) {
-                $data = implode("\n", $matches[1]);
-            }
-
-            Document::getInstance()->saveToSheet($data, $this->currentRowId, $this->currentColumn);
-            $this->nextTick();
-
-            $deferred->resolve();
-        });
-
-        return $deferred->promise();
+            $data = implode("\n", $matches[1]);
+            $column = $this->currentColumn === 'email' ? 'phones_osint' : 'email_osint';
+            DbHandler::getInstance()->addDataToDB($this->currentId, $column,  $data);
+        }
     }
 
-    /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
     public function saveSocials($matches) :void
     {
-        if (!$this->currentRowId) {
-            return;
-        }
 
-        $data = '';
         if ( isset($matches[1]) ) {
+
             $data = implode("\n", $matches[1]);
+            DbHandler::getInstance()->addDataToDB($this->currentId, 'social_osint', $data);
         }
-        Document::getInstance()->saveSocialsToSheet($data, $this->currentRowId);
     }
 
     public function nextTick() :void
     {
         $app = App::getInstance();
 
-        $isValidBefore = $app->stack->current()->valid();
         //Next tick of Generator from initCell()
-        $app->stack->current()->next();
-        $isValidAfter = $app->stack->current()->valid();
+        $app->stack->next();
+        $isValid = $app->stack->valid();
 
-        if ( $isValidBefore && !$isValidAfter ){
-            //Next tick of Generator from parseStart()
-            $app->stack->next();
-            if ( !$app->stack->valid() ){
-                SessionsHandler::getInstance()->dieScript($this->currentColumn, $this->currentRowId);
-            }
-            $this->startSending();
+        if ( !$isValid ) {
+
+            SessionsHandler::getInstance()->getSession()->stop();
+            die();
         }
     }
 
     /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
      * @throws SecurityException
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
      */
-    public function changeSession() :void
+    public function changeSession(): void
     {
         $SessionsHandler = SessionsHandler::getInstance();
 
-        $SessionsHandler->switchSession($this->currentColumn, $this->currentRowId);
+        $SessionsHandler->switchSession($this->currentColumn, $this->currentId, $this->currentValue);
         $MadelineProto = $SessionsHandler->getSession();
 
-        //This part needed to prevent execution commands from another session
+        //This part is needed to prevent execution commands from previous session
         sleep(1);
         $this->timeOfSwitchSession = time();
         sleep(1);

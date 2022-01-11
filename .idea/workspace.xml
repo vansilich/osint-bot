@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4187ef83-fe65-4e35-8f56-9c5944f126e8" name="Changes" comment="" />
+    <list default="true" id="f13cb178-f968-4797-b037-a6456732892a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MadelineProto.log" beforeDir="false" afterPath="$PROJECT_DIR$/MadelineProto.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/App.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/App.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Db.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Db.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/Bot.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/Bot.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/Data/ChunkReadFilter.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/Data/Document.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/ParseEventHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/ParseEventHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/SessionsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/SessionsHandler.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/db.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/db.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/init.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/init.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/conf/responses.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/responses.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/form.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/error.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/uploads/@kulikovIvan007.xlsx" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -10,6 +27,13 @@
   <component name="ComposerSettings" doNotAsk="true" synchronizationState="SYNCHRONIZE">
     <pharConfigPath>$PROJECT_DIR$/composer.json</pharConfigPath>
     <execution />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -25,13 +49,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpDebugGeneral" listening_started="true" />
-  <component name="PhpServers">
-    <servers>
-      <server host="osint.loc" id="9e33f30d-7509-4c4f-a85d-4989523fb24a" name="osint.loc" />
-    </servers>
-  </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
+  <component name="PhpWorkspaceProjectConfiguration">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/cash/lrucache" />
       <path value="$PROJECT_DIR$/vendor/markbaker/complex" />
@@ -103,11 +121,8 @@
       <path value="$PROJECT_DIR$/vendor/kelunik/certificate" />
     </include_path>
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedIndex" value="1" />
-  </component>
-  <component name="ProjectId" id="21a9ODqkp2gjK3cUrDcUiuZFj8c" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+  <component name="ProjectId" id="22zdNleVuMYKOZcZ10U2003iz4G" />
+  <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="1" id="Add" />
   </component>
   <component name="ProjectViewState">
@@ -115,7 +130,6 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
-    <property name="Constants" value="false" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
@@ -125,59 +139,26 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="reference.webide.settings.project.settings.php" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\xampp\htdocs\OSINT\app\UserBot" />
-      <recent name="C:\xampp\htdocs\OSINT\uploads" />
-      <recent name="C:\xampp\htdocs\OSINT\app\Parser" />
-      <recent name="C:\xampp\htdocs\OSINT" />
-      <recent name="C:\xampp\htdocs\OSINT\app" />
+      <recent name="C:\xampp\htdocs\OSINT\migrations" />
     </key>
-  </component>
-  <component name="RunManager">
-    <configuration name="Unnamed" type="PhpWebAppRunConfigurationType" factoryName="PHP Web Application" nameIsGenerated="true" server_name="osint.loc">
-      <method v="2" />
-    </configuration>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="4187ef83-fe65-4e35-8f56-9c5944f126e8" name="Changes" comment="" />
-      <created>1638168296849</created>
+      <changelist id="f13cb178-f968-4797-b037-a6456732892a" name="Changes" comment="" />
+      <created>1640844315447</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1638168296849</updated>
-      <workItem from="1638168298059" duration="1404000" />
-      <workItem from="1638171834532" duration="1910000" />
-      <workItem from="1638175820225" duration="4374000" />
-      <workItem from="1638182423088" duration="3245000" />
-      <workItem from="1638185866762" duration="7551000" />
-      <workItem from="1638251377095" duration="28767000" />
-      <workItem from="1638340810242" duration="9128000" />
-      <workItem from="1638352862965" duration="12908000" />
-      <workItem from="1638424488927" duration="27089000" />
-      <workItem from="1638510443588" duration="26799000" />
-      <workItem from="1638769484093" duration="30651000" />
-      <workItem from="1638856556743" duration="26740000" />
-      <workItem from="1638942294938" duration="26604000" />
-      <workItem from="1639028905800" duration="7023000" />
-      <workItem from="1639036410571" duration="1199000" />
-      <workItem from="1639037708065" duration="20354000" />
-      <workItem from="1639115750976" duration="26026000" />
-      <workItem from="1639374305935" duration="25377000" />
-      <workItem from="1639461672023" duration="501000" />
-      <workItem from="1639462244719" duration="132000" />
-      <workItem from="1639462432754" duration="865000" />
-      <workItem from="1639464250917" duration="25000" />
-      <workItem from="1639662276904" duration="806000" />
-      <workItem from="1639720890280" duration="209000" />
-      <workItem from="1639996309931" duration="821000" />
-      <workItem from="1639998271253" duration="5546000" />
-      <workItem from="1640763051678" duration="1612000" />
+      <updated>1640844315447</updated>
+      <workItem from="1640844319071" duration="11488000" />
+      <workItem from="1641794083060" duration="7887000" />
+      <workItem from="1641888097632" duration="2191000" />
+      <workItem from="1641891604483" duration="234000" />
+      <workItem from="1641894962528" duration="1798000" />
     </task>
     <servers />
   </component>
@@ -194,25 +175,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="php">
-          <url>file://$PROJECT_DIR$/app/App.php</url>
-          <line>24</line>
-          <option name="timeStamp" value="3" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
-    <watches-manager>
-      <configuration name="index.php">
-        <watch expression="$settings" />
-      </configuration>
-    </watches-manager>
-  </component>
-  <component name="XSLT-Support.FileAssociations.UIState">
-    <expand />
-    <select />
   </component>
 </project>

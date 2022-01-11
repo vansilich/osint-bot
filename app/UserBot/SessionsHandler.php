@@ -4,9 +4,11 @@ namespace App\UserBot;
 
 use App\App;
 use App\Singleton;
+use App\UserBot\Data\DbHandler;
 use App\UserBot\Data\Document;
 use danog\MadelineProto\API;
 use Exception;
+use JetBrains\PhpStorm\NoReturn;
 
 class SessionsHandler
 {
@@ -15,12 +17,7 @@ class SessionsHandler
     protected int $currentSessionIndex = 0;
     public $self;
 
-    protected array $sessions = [
-        'bot1',
-        'bot2',
-        'bot3',
-        'bot4',
-    ];
+    protected array $sessions = [];
 
     protected API $MadelineProto;
 
@@ -31,11 +28,27 @@ class SessionsHandler
      */
     public function init()
     {
+        $this->setupSessions();
         $sessionID = $this->getSessionID();
+
         if (!$sessionID){
             throw new Exception('Нет доступных сессий');
         }
+
         $this->startSession( $sessionID );
+    }
+
+    private function setupSessions(): void
+    {
+        $files = glob(TG_SESSIONS_PATH . '/*');
+
+        foreach($files as $file) {
+            $file = pathinfo($file);
+
+            if ( !isset($file['extension']) ) {
+                $this->sessions[] = $file['filename'];
+            }
+        }
     }
 
     protected function getSessionID()
@@ -50,7 +63,7 @@ class SessionsHandler
     {
         $this->MadelineProto = new API(TG_SESSIONS_PATH . DIRECTORY_SEPARATOR .$sessionID);
 
-//        $this->MadelineProto->start();
+        $this->MadelineProto->start();
 
         $this->self = $this->MadelineProto->getSelf();
         $this->MadelineProto->logger( $this->self );
@@ -63,49 +76,27 @@ class SessionsHandler
         return $this->MadelineProto;
     }
 
-    /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function switchSession($currentColumn, $currentRowId)
+    public function switchSession( $currentColumn, $currentRowId, $currentValue )
     {
         $this->currentSessionIndex++;
         $sessionID = $this->getSessionID();
 
         if (!$sessionID) {
-            $this->dieScript($currentColumn, $currentRowId);
+            $this->dieScript($currentColumn, $currentRowId, $currentValue);
         }
 
         $this->MadelineProto->stop();
         $this->startSession($sessionID);
     }
 
-    /**
-     * @throws \PhpOffice\PhpSpreadsheet\Exception
-     * @throws \PhpOffice\PhpSpreadsheet\Writer\Exception
-     */
-    public function dieScript($currentColumn, $currentRowId)
+    #[NoReturn] public function dieScript($currentColumn, $currentRowId, $value )
     {
+        DbHandler::getInstance()->saveLastValues($currentColumn, $currentRowId, $value);
 
-        Document::getInstance()->saveLastCell($currentColumn, $currentRowId);
+        file_put_contents(TMP . DIRECTORY_SEPARATOR . 'success.log', "\n===\nУспех\n===\n", FILE_APPEND);
 
-        $app = App::getInstance();
-
-        $this->MadelineProto->loop( function () use ($app) {
-            yield $this->MadelineProto->messages->sendMedia([
-                'peer' => $app->user_nick,
-                'media' => [
-                    '_' => 'inputMediaUploadedDocument',
-                    'file' => $app->file_path,
-                    'attributes' => [
-                        [ '_' => 'documentAttributeFilename', 'file_name' => $app->file_name ]
-                    ]
-                ],
-                'message' => 'отработанный файл',
-            ]);
-        });
-
-        file_put_contents(ROOT . DIRECTORY_SEPARATOR . 'userbot_status.php', serialize(USERBOT_STOPPED));
+        file_put_contents(STATUS_PATH, serialize(USERBOT_STOPPED));
+        $this->MadelineProto->stop();
 
         die();
     }

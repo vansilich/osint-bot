@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="9bb86d45-fcc6-4c4d-b1ba-3a58c29a87e3" name="osint">
+        <fileTransfer rootFolder="/domains/prcexpo.ru/osint" accessType="SFTP" host="j743689.myjino.ru" port="2222" sshConfigId="4b75fd06-5aef-48e5-b4a9-8cfce133d9c5" sshConfig="j743689_admin@j743689.myjino.ru:2222 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
