@@ -2,22 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f13cb178-f968-4797-b037-a6456732892a" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/OSINT.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/OSINT.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/deployment.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/deployment.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MadelineProto.log" beforeDir="false" afterPath="$PROJECT_DIR$/MadelineProto.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/App.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/App.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Db.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Db.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/UserBot/Bot.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/Bot.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/UserBot/Data/ChunkReadFilter.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/UserBot/Data/Document.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/UserBot/Data/DbHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/Data/DbHandler.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/UserBot/ParseEventHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/ParseEventHandler.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/UserBot/SessionsHandler.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/UserBot/SessionsHandler.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf/db.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/db.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conf/init.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/init.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/conf/responses.php" beforeDir="false" afterPath="$PROJECT_DIR$/conf/responses.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/form.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tmp/error.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/error.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/uploads/@kulikovIvan007.xlsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/helpers/functions.php" beforeDir="false" afterPath="$PROJECT_DIR$/helpers/functions.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/last_values.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssh.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/debug.log" beforeDir="false" afterPath="$PROJECT_DIR$/tmp/debug.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/error.log" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tmp/success.log" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -49,7 +53,13 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="PhpWorkspaceProjectConfiguration">
+  <component name="PhpDebugGeneral" listening_started="true" />
+  <component name="PhpServers">
+    <servers>
+      <server host="osint.loc" id="ed352ecc-43d4-4170-bdf6-df4c1abc2b52" name="Unnamed" />
+    </servers>
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/cash/lrucache" />
       <path value="$PROJECT_DIR$/vendor/markbaker/complex" />
@@ -130,6 +140,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="DatabaseDriversLRU" value="mysql" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="true" />
@@ -139,14 +150,32 @@
     <property name="WebServerToolWindowPanel.toolwindow.show.permissions" value="false" />
     <property name="WebServerToolWindowPanel.toolwindow.show.size" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="reference.settings.deploy.options" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\xampp\htdocs\OSINT\get-new-contacts" />
       <recent name="C:\xampp\htdocs\OSINT\migrations" />
     </key>
   </component>
+  <component name="RunManager">
+    <configuration name="Unnamed" type="PhpLocalRunConfigurationType" factoryName="PHP Console" nameIsGenerated="true" path="$PROJECT_DIR$/testing/index.php">
+      <CommandLine>
+        <PhpTestInterpreterSettings>
+          <option name="interpreterName" value="PHP" />
+        </PhpTestInterpreterSettings>
+      </CommandLine>
+      <method v="2" />
+    </configuration>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SshConsoleOptionsProvider">
+    <option name="myEncoding" value="UTF-8" />
+    <option name="myConnectionType" value="NONE" />
+    <option name="myConnectionId" value="" />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="f13cb178-f968-4797-b037-a6456732892a" name="Changes" comment="" />
@@ -158,7 +187,45 @@
       <workItem from="1641794083060" duration="7887000" />
       <workItem from="1641888097632" duration="2191000" />
       <workItem from="1641891604483" duration="234000" />
-      <workItem from="1641894962528" duration="1798000" />
+      <workItem from="1641894962528" duration="2728000" />
+      <workItem from="1641899832883" duration="843000" />
+      <workItem from="1641901918728" duration="8388000" />
+      <workItem from="1641967305023" duration="8521000" />
+      <workItem from="1641980803985" duration="46000" />
+      <workItem from="1642062874682" duration="2109000" />
+      <workItem from="1642068385884" duration="238000" />
+      <workItem from="1642071970734" duration="2634000" />
+      <workItem from="1642140601726" duration="1156000" />
+      <workItem from="1642142686887" duration="89000" />
+      <workItem from="1642157569671" duration="322000" />
+      <workItem from="1642159324560" duration="5000000" />
+      <workItem from="1642166226354" duration="3598000" />
+      <workItem from="1642399242357" duration="1060000" />
+      <workItem from="1642400457735" duration="3264000" />
+      <workItem from="1642485542932" duration="20144000" />
+      <workItem from="1642571487435" duration="11578000" />
+      <workItem from="1642658041418" duration="301000" />
+      <workItem from="1642662912454" duration="3672000" />
+      <workItem from="1642686549686" duration="666000" />
+      <workItem from="1643349549025" duration="1740000" />
+      <workItem from="1643608690027" duration="2055000" />
+      <workItem from="1643610779412" duration="1602000" />
+      <workItem from="1643695362661" duration="735000" />
+      <workItem from="1643781646026" duration="1195000" />
+      <workItem from="1643786225887" duration="1214000" />
+      <workItem from="1643868901051" duration="373000" />
+      <workItem from="1644923006110" duration="80000" />
+      <workItem from="1644932230661" duration="238000" />
+      <workItem from="1645510762872" duration="8467000" />
+      <workItem from="1645522095313" duration="5060000" />
+      <workItem from="1645682559012" duration="2230000" />
+      <workItem from="1646031886619" duration="5397000" />
+      <workItem from="1646053839424" duration="2662000" />
+      <workItem from="1646113438461" duration="182000" />
+      <workItem from="1646141964201" duration="6000" />
+      <workItem from="1646141989549" duration="66000" />
+      <workItem from="1646200672668" duration="5691000" />
+      <workItem from="1647500002665" duration="788000" />
     </task>
     <servers />
   </component>
@@ -175,5 +242,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

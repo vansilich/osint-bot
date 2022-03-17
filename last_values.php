@@ -1,1 +1,0 @@
-a:3:{s:7:"last_id";i:11;s:11:"last_column";s:5:"email";s:10:"last_value";s:16:"snab4@kng.vrn.ru";}

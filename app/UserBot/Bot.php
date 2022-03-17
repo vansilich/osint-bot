@@ -2,39 +2,32 @@
 
 namespace App\UserBot;
 
-use Amp\Deferred;
-use Amp\Loop;
-use Amp\Promise;
 use App\App;
+use App\Logger;
 use App\Singleton;
 use App\UserBot\Data\DbHandler;
 use danog\MadelineProto\SecurityException;
 use function osint\helpers\formatPhone;
+use function osint\helpers\isEmailValid;
 
 class Bot
 {
     use Singleton;
 
-    public string $currentColumn = '';
-    public string $currentValue = '';
     public int $currentId;
+    public int $currentInn;
+    public string $currentType = '';
+    public string $currentValue = '';
 
     public int $timeOfSwitchSession = 0;
-    public bool $waitingEnterCommand = false;
 
     public string $currentCommand;
-
-    private array $commands = [
-        'getEmail' => '📧 Поиск по почте',
-        'getPhone' => '📞 Поиск по номеру',
-    ];
 
     public function __construct() {}
 
     public function init()
     {
         $this->timeOfSwitchSession = time();
-//        var_dump($this->MadelineProto->getInfo(-342899624));
     }
 
     /**
@@ -45,41 +38,27 @@ class Bot
         SessionsHandler::getInstance()->getSession()->startAndLoop($class);
     }
 
-    public function initCell(): \Generator
+    public function commandsGenerator(): \Generator
     {
-
         $DbHandler= DbHandler::getInstance();
+
         foreach ( $DbHandler->getData() as $row ) {
 
             $this->currentId = $row['id'];
-            foreach ( $DbHandler->wanted_columns as $columnName) {
+            $this->currentInn = $row['company_inn'];
+            $this->currentType = $row['type'];
+            $this->currentValue = $value = $row['value'];
 
-                $this->currentColumn = $columnName;
-                $dataString = $row[$columnName] ?? null;
+            if ($this->currentType === "email" && $value !== '' && isEmailValid( $value )) {
 
-                foreach ( explode("\n", $dataString) as $value ) {
+                yield $this->sendCommand( $value );
+            }
+            elseif ($this->currentType === "phone") {
+                $phone = formatPhone( $value );
 
-                    $this->currentValue = $value;
+                if ($phone !== '') {
 
-                    if ($columnName === "email" && $value !== '') {
-
-                        $this->waitingEnterCommand = true;
-                        yield $this->sendMessage( $this->commands['getEmail'] );
-                        $this->waitingEnterCommand = false;
-                        yield $this->sendMessage( $value );
-
-                    }
-                    elseif ($columnName === "phones") {
-                        $phone = formatPhone($value);
-
-                        if ($phone !== '') {
-
-                            $this->waitingEnterCommand = true;
-                            yield $this->sendMessage( $this->commands['getPhone'] );
-                            $this->waitingEnterCommand = false;
-                            yield $this->sendMessage( $phone );
-                        }
-                    }
+                    yield $this->sendCommand( $phone );
                 }
             }
 
@@ -87,41 +66,48 @@ class Bot
     }
 
 
-    public function sendMessage($command): void
+    public function sendCommand($command): void
     {
+        //Задержка для защита от бана за throttling
+        sleep( rand(1, 2) );
+
         $MadelineProto = SessionsHandler::getInstance()->getSession();
         $this->currentCommand = $command;
 
+        Logger::debug("Send: $command");
+
         $MadelineProto->loop( function () use ($MadelineProto, $command) {
-            yield $MadelineProto->messages->sendMessage(['peer' => BOT_NICK, 'message' => $command], ['queue' => 'bot']);
+            yield $MadelineProto->messages->sendMessage(['peer' => BOT_NICK, 'message' => $command]);
         });
     }
 
-    public function saveValues($matches): void
+    public function saveValues( array $matches ): void
     {
-        $this->waitingEnterCommand = true;
+        //Задержка для защита от бана за throttling
+        sleep( rand(1, 2) );
 
-        DbHandler::getInstance()->saveLastValues($this->currentColumn, $this->currentId, $this->currentValue);
+        $DbHandler = DbHandler::getInstance();
 
         if ( isset($matches[1]) ) {
 
             $data = implode("\n", $matches[1]);
-            $column = $this->currentColumn === 'email' ? 'phones_osint' : 'email_osint';
-            DbHandler::getInstance()->addDataToDB($this->currentId, $column,  $data);
+            $type = $this->currentType === 'email' ? 'phones_osint' : 'email_osint';
+            $DbHandler->saveResults($this->currentInn, $data, $type);
         }
+
+        $DbHandler->markAsFetched( $this->currentId );
     }
 
-    public function saveSocials($matches) :void
+    public function saveSocials($matches): void
     {
-
         if ( isset($matches[1]) ) {
 
             $data = implode("\n", $matches[1]);
-            DbHandler::getInstance()->addDataToDB($this->currentId, 'social_osint', $data);
+            DbHandler::getInstance()->saveResults($this->currentInn, $data, 'social_osint');
         }
     }
 
-    public function nextTick() :void
+    public function nextTick(): void
     {
         $app = App::getInstance();
 
@@ -129,10 +115,8 @@ class Bot
         $app->stack->next();
         $isValid = $app->stack->valid();
 
-        if ( !$isValid ) {
-
-            SessionsHandler::getInstance()->getSession()->stop();
-            die();
+        if (!$isValid) {
+            SessionsHandler::getInstance()->dieScript();
         }
     }
 
@@ -143,7 +127,7 @@ class Bot
     {
         $SessionsHandler = SessionsHandler::getInstance();
 
-        $SessionsHandler->switchSession($this->currentColumn, $this->currentId, $this->currentValue);
+        $SessionsHandler->switchSession();
         $MadelineProto = $SessionsHandler->getSession();
 
         //This part is needed to prevent execution commands from previous session
@@ -152,10 +136,11 @@ class Bot
         sleep(1);
 
         $MadelineProto->loop( function () use ($MadelineProto) {
-            yield $MadelineProto->messages->sendMessage(['peer' => BOT_NICK, 'message' => '123'], ['queue' => 'bot']);
+            yield $MadelineProto->messages->sendMessage(['peer' => BOT_NICK, 'message' => '/start'], ['queue' => 'bot']);
         });
 
-        $this->sendMessage( $this->currentCommand );
+        $this->sendCommand( $this->currentCommand );
+
         $this->initEventHandler( ParseEventHandler::class );
     }
 }

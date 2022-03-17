@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('Europe/Moscow');
+
 const DEBUG = 1; //1 - debug on, 0 - production
 define("ROOT", dirname(__DIR__));
 define("TMP", realpath(ROOT . '/tmp'));
@@ -7,7 +9,6 @@ define("CONF", realpath(ROOT . '/conf'));
 define("TG_SESSIONS_PATH", realpath(ROOT . '/tg_sessions'));
 
 const STATUS_PATH = ROOT . DIRECTORY_SEPARATOR . 'userbot_status.php';
-const LAST_VALUES_PATH = ROOT . DIRECTORY_SEPARATOR . 'last_values.php';
 
 const USERBOT_RUNNED = 'running';
 const USERBOT_STOPPED = 'stopped';

@@ -5,15 +5,13 @@ namespace App\UserBot\Data;
 use App\Db;
 use App\Singleton;
 
-class DbHandler
+class DbHandler extends Db
 {
     use Singleton;
 
-    public array $wanted_columns = [ 'phones', 'email' ];
-
-    public function init()
+    public function __construct()
     {
-        Db::getInstance()->init();
+        parent::__construct();
     }
 
     /**
@@ -23,53 +21,21 @@ class DbHandler
      */
     public function getData(): array
     {
-        $startSettings = unserialize( file_get_contents(LAST_VALUES_PATH) );
-        $startFromId = $startSettings['last_id'] ?? 1;
-
-        $response = $this->queryFetchAll( "SELECT id, phones, email FROM inn WHERE id >= $startFromId" );
-
-        if ( $startSettings['last_column'] == 'email' ) {
-            unset($response[0]['phones']);
-        }
-
-        $currentValues = explode("\n", $response[0][$startSettings['last_column']]);
-
-        $lastValueIndex = array_search( $startSettings['last_value'], $currentValues);
-
-        if ($currentValues[$lastValueIndex] != null) {
-            array_splice($currentValues, 0, $lastValueIndex);
-        }
-
-        $response[0][ $startSettings['last_column'] ] = implode("\n", $currentValues);
-
-        return $response;
+        return $this->queryFetchAll( "SELECT id, company_inn, value, type FROM osint_company_contacts WHERE is_fetched != 1" );
     }
 
-    public function saveLastValues($currentColumn, $currentId, $value)
+    public function saveResults( $inn, $data, $column )
     {
-        file_put_contents(LAST_VALUES_PATH, serialize([
-            'last_id' => $currentId,
-            'last_column' => $currentColumn,
-            'last_value' => $value,
-        ]));
-    }
-
-    public function addDataToDB($id, $column, $data)
-    {
-        $pdo = Db::getInstance()->pdo;
-        $query = $pdo->query("SELECT $column FROM inn WHERE id = $id");
+        $query = $this->pdo->query("SELECT $column FROM inn WHERE inn = $inn");
         $lastValue = $query->fetch(\PDO::FETCH_ASSOC )[$column];
 
         $data = $lastValue . "\n" . $data;
-        $pdo->query("UPDATE inn SET $column = '$data' WHERE id = $id")->execute();
+        $this->pdo->query("UPDATE inn SET $column = '$data' WHERE inn = $inn")->execute();
     }
 
-    public function queryFetchAll( $query ): bool|array
+    public function markAsFetched($id)
     {
-        $pdo = Db::getInstance()->pdo;
-        $query = $pdo->query( $query );
-
-        return $query->fetchAll( \PDO::FETCH_ASSOC );
+        $this->pdo->query("UPDATE osint_company_contacts SET is_fetched = 1 WHERE id = $id")->execute();
     }
 
 }

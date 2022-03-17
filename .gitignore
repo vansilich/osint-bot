@@ -1,2 +1,5 @@
 vendor
 /tg_sessions/**
+/tmp/**
+MadelineProto.log
+ssh.txt

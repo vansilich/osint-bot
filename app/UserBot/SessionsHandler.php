@@ -2,10 +2,8 @@
 
 namespace App\UserBot;
 
-use App\App;
+use App\Logger;
 use App\Singleton;
-use App\UserBot\Data\DbHandler;
-use App\UserBot\Data\Document;
 use danog\MadelineProto\API;
 use Exception;
 use JetBrains\PhpStorm\NoReturn;
@@ -14,10 +12,10 @@ class SessionsHandler
 {
     use Singleton;
 
-    protected int $currentSessionIndex = 0;
+    public int $currentSessionIndex = 0;
     public $self;
 
-    protected array $sessions = [];
+    public array $sessions = [];
 
     protected API $MadelineProto;
 
@@ -51,7 +49,7 @@ class SessionsHandler
         }
     }
 
-    protected function getSessionID()
+    public function getSessionID()
     {
         if (array_key_exists($this->currentSessionIndex, $this->sessions)) {
             return $this->sessions[$this->currentSessionIndex];
@@ -61,6 +59,8 @@ class SessionsHandler
 
     protected function startSession( $sessionID )
     {
+        Logger::debug("Starting session $sessionID");
+
         $this->MadelineProto = new API(TG_SESSIONS_PATH . DIRECTORY_SEPARATOR .$sessionID);
 
         $this->MadelineProto->start();
@@ -76,28 +76,23 @@ class SessionsHandler
         return $this->MadelineProto;
     }
 
-    public function switchSession( $currentColumn, $currentRowId, $currentValue )
+    public function switchSession()
     {
         $this->currentSessionIndex++;
         $sessionID = $this->getSessionID();
 
         if (!$sessionID) {
-            $this->dieScript($currentColumn, $currentRowId, $currentValue);
+            $this->dieScript();
         }
 
         $this->MadelineProto->stop();
         $this->startSession($sessionID);
     }
 
-    #[NoReturn] public function dieScript($currentColumn, $currentRowId, $value )
+    #[NoReturn] public function dieScript()
     {
-        DbHandler::getInstance()->saveLastValues($currentColumn, $currentRowId, $value);
-
-        file_put_contents(TMP . DIRECTORY_SEPARATOR . 'success.log', "\n===\nУспех\n===\n", FILE_APPEND);
-
-        file_put_contents(STATUS_PATH, serialize(USERBOT_STOPPED));
+        file_put_contents(STATUS_PATH, serialize(USERBOT_STOPPED) );
         $this->MadelineProto->stop();
-
         die();
     }
 

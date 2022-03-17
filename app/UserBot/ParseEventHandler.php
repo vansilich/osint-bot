@@ -2,9 +2,9 @@
 
 namespace App\UserBot;
 
+use App\Logger;
 use App\UserBot\Parser\BotResponse;
 use danog\MadelineProto\EventHandler;
-use function Amp\call;
 
 class ParseEventHandler extends EventHandler
 {
@@ -36,28 +36,30 @@ class ParseEventHandler extends EventHandler
         $content = unserialize( file_get_contents(STATUS_PATH) );
 
         if ($content === USERBOT_STOPPED) {
-            SessionsHandler::getInstance()->getSession()->stop();
-            die();
+            SessionsHandler::getInstance()->dieScript();
         }
 
         $bot = Bot::getInstance();
 
         $message = $update['message'];
 
-        if ( $this->isNotBotWithUser( $message ) ||
-             $this->isNotMatchedCommand($message) ||
-             $this->wasSentBeforeSession($message) ) {
+        try {
+            if ( $this->isNotBotWithUser( $message ) ||
+                $this->isNotMatchedCommand($message) ||
+                $this->wasSentBeforeSession($message) ) {
+                return;
+            }
+
+        } catch (\Exception $err) {
+            Logger::error("\n".$err->getMessage()."\n");
             return;
         }
+
+        Logger::debug("Get message: ${message['message']}");
 
         list($method, $matches) = BotResponse::commandMatch($message['message']);
 
-        if ( $bot->waitingEnterCommand && ($method !== 'nextTick' && $method !== 'changeSession' && $method !== 'saveSocials') ) {
-            return;
-        }
-        if ( !$bot->waitingEnterCommand && ($method !== 'saveValues' && $method !== 'startSending') ) {
-            return;
-        }
+        Logger::debug("Do message method: $method");
 
         $bot->$method( $matches );
     }

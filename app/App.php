@@ -19,30 +19,28 @@ class App
      */
     public function init()
     {
+        if (!DEBUG) {
+            $UserBot_status = unserialize( file_get_contents( STATUS_PATH ) );
 
-        $UserBot_status = unserialize( file_get_contents( STATUS_PATH ) );
+            if ($UserBot_status === USERBOT_RUNNED) die('Сейчас бот занят, попробуйте позже');
 
-        if ($UserBot_status === USERBOT_RUNNED) {
-            die('Сейчас бот занят, попробуйте позже');
+            file_put_contents(STATUS_PATH, serialize(USERBOT_RUNNED));
         }
 
-        file_put_contents(STATUS_PATH, serialize(USERBOT_RUNNED));
+        DbHandler::getInstance();
 
-        DbHandler::getInstance()->init();
+        SessionsHandler::getInstance()->init();
 
-//        $SessionsHandler = SessionsHandler::getInstance();
-//        $SessionsHandler->init();
-//
-//        $bot = Bot::getInstance();
-//        $bot->init();
-//
-//        $this->stack = $bot->initCell();
-//
-//        $bot->sendMessage( '/start');
-//
-//        $this->stack->current();
-//
-//        $bot->initEventHandler( ParseEventHandler::class );
+        $bot = Bot::getInstance();
+        $bot->init();
+
+        $this->stack = $bot->commandsGenerator();
+
+        $bot->sendCommand( '/start');
+
+        $this->stack->current();
+
+        $bot->initEventHandler( ParseEventHandler::class );
     }
 
 }
